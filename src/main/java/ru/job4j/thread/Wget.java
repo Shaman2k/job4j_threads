@@ -9,8 +9,6 @@ import java.net.URL;
 import java.nio.file.Files;
 
 public class Wget implements Runnable {
-    private final static long MILLISECOND_IN_SECOND = 1000L;
-    private final static long NANOSECOND_IN_MILLISECOND = 1000000L;
     private final String url;
     private final int speed;
     private final String filename;
@@ -31,21 +29,17 @@ public class Wget implements Runnable {
             var dataBuffer = new byte[512];
             int bytesRead;
             int dowloaded = 0;
-            long startDownload = System.nanoTime();
-            long timeElapsed = 0;
             while ((bytesRead = input.read(dataBuffer, 0, dataBuffer.length)) != -1) {
                 output.write(dataBuffer, 0, bytesRead);
                 dowloaded += bytesRead;
-                timeElapsed += System.nanoTime() - startDownload;
                 if (dowloaded >= speed) {
-                    System.out.printf("Read %d bytes : %d nano\n", dowloaded, timeElapsed);
-                    long waitTime = MILLISECOND_IN_SECOND - (timeElapsed / NANOSECOND_IN_MILLISECOND);
-                    if (waitTime >= 0) {
-                        Thread.sleep(waitTime);
+                    long interval = System.currentTimeMillis() - startAt;
+                    if (interval < 1000) {
+                        Thread.sleep(1000 - interval);
+                        System.out.printf("Read %d bytes : %d ms\n", dowloaded, interval);
                     }
-                    startDownload = System.nanoTime();
                     dowloaded = 0;
-                    timeElapsed = 0;
+                    startAt = System.currentTimeMillis();
                 }
             }
             System.out.println(Files.size(file.toPath()) + " bytes");
