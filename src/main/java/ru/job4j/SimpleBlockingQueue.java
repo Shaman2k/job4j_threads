@@ -37,4 +37,12 @@ public class SimpleBlockingQueue<T> {
             return value;
         }
     }
+
+    public boolean isEmpty() {
+        boolean result;
+        synchronized (this) {
+            result = queue.isEmpty();
+        }
+        return result;
+    }
 }
