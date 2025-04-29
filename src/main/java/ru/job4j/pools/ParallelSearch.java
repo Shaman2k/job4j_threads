@@ -44,11 +44,10 @@ public class ParallelSearch<T> extends RecursiveTask<Integer> {
     }
 
     public static <T> int search(T[] source, T target) {
-        if (source == null || source.length == 1 || target == null) {
-            return -1;
-        } else {
-            ForkJoinPool forkJoinPool = new ForkJoinPool();
-            return forkJoinPool.invoke(new ParallelSearch<T>(source, target, 0, source.length - 1));
+        if (source == null || source.length == 0 || target == null) {
+            throw new IllegalArgumentException();
         }
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        return forkJoinPool.invoke(new ParallelSearch<T>(source, target, 0, source.length - 1));
     }
 }

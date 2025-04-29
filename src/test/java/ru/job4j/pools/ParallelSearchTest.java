@@ -2,7 +2,8 @@ package ru.job4j.pools;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ParallelSearchTest {
     @Test
@@ -57,26 +58,23 @@ class ParallelSearchTest {
     public void whenArrayIsEmpty() {
         Integer[] array = {};
         int target = 0;
-        int expected = -1;
-        int result = ParallelSearch.search(array, target);
-        assertEquals(expected, result);
+        assertThatThrownBy(() -> ParallelSearch.search(array, target))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void whenArrayIsNull() {
         Integer[] array = null;
         int target = 0;
-        int expected = -1;
-        int result = ParallelSearch.search(array, target);
-        assertEquals(expected, result);
+        assertThatThrownBy(() -> ParallelSearch.search(array, target))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     public void whenTargetIsNull() {
         Integer[] array = {1, 2, 3, 4, 5};
         Integer target = null;
-        int expected = -1;
-        int result = ParallelSearch.search(array, target);
-        assertEquals(expected, result);
+        assertThatThrownBy(() -> ParallelSearch.search(array, target))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
